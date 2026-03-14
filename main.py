@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Query
 from database import create_db_and_tables, get_session
 from sqlmodel import Session,select
 from models import Product
@@ -52,6 +52,7 @@ def update_product(product_id: int, product: Product, session: Session = Depends
     session.add(existing_product)
     session.commit()
     session.refresh(existing_product)
+    return existing_product
 
 #Seccion "PUT"
 
