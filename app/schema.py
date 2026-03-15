@@ -4,7 +4,7 @@ from sqlmodel import Field, SQLModel
 # Clase base que define los campos comunes para un producto
 # Se usa para validación y reutilización de código
 class ProductBase(SQLModel):
-    name: str = Field(index=True) # Nombre del producto, indexado para búsquedas rápidas
+    name: str = Field(index=True, min_length=1, max_length=100) # Nombre del producto, indexado para búsquedas rápidas
     price: float = Field(gt=0)    # Precio del producto, debe ser mayor a 0 (greater than)
     stock: int = Field(default=0, ge=0) # Cantidad disponible, mínimo 0 (greater or equal)
     active: bool = Field(default=True)  # Estado de disponibilidad (activo por defecto)
