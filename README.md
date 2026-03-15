@@ -1,34 +1,41 @@
 # API de Productos
 
-Esta es una API REST para la gestión de productos, construida con FastAPI y SQLModel.
+Esta es una API REST para la gestión de productos, construida con FastAPI y SQLModel
 
-## Requisitos
+## 🚀 Instalación y Ejecución Rápida
 
-- Docker
-- Docker Compose
+Para facilitar la isntalacion, el proyecto se puede poner en marcha con un solo comando:
 
-## Instrucciones de Construcción y Ejecución
+1. **Clonar el repositorio:**
 
-### 1. Construir la imagen
+   ```bash
+   git clone https://github.com/SaltoAngel/api-productos-python.git
+   cd api-productos-python
+   ```
 
-```bash
-docker build -t api-productos .
-```
+2. **Levantar el entorno completo:**
 
-### 2. Levantar la aplicación con Docker Compose
+   ```bash
+   docker compose up --build
+   ```
 
-```bash
-docker-compose up -d
-```
+   Este comando construye la imagen de la API y levanta la base de datos PostgreSQL automáticamente.
 
-La API estará disponible en `http://localhost:8080`.
+3. **Verificación:**
+   La API estará disponible en `http://localhost:8080/docs`
 
-## Documentación de la API (Endpoints)
+---
 
-### 1. Crear un producto
+## 🛠 Documentación de la API (Endpoints)
+
+### 1. Desactivar producto
+
+**PUT `/products/{id}/deactivate`**
+Establece el campo `active` en `false`. Es el método obligatorio para dar de baja un producto.
+
+### 2. Crear un producto
 
 **POST `/products`**
-
 **Request Body:**
 
 ```json
@@ -44,57 +51,49 @@ La API estará disponible en `http://localhost:8080`.
 
 ```json
 {
+  "id": 1,
   "name": "Laptop Pro",
   "price": 1200.5,
   "stock": 10,
   "active": true,
-  "id": 1,
   "createdAt": "2026-03-15T15:15:00.000Z"
 }
 ```
 
-### 2. Listar productos
+### 3. Listar productos
 
 **GET `/products`**
+Permite obtener la lista de productos con soporte para paginación (`offset` y `limit`).
 
-**Response (200 OK):**
-
-```json
-[
-  {
-    "id": 1,
-    "name": "Laptop Pro",
-    "price": 1200.5,
-    "stock": 10,
-    "active": true,
-    "createdAt": "2026-03-15T15:15:00.000Z"
-  }
-]
-```
-
-### 3. Obtener un producto por ID
+### 4. Obtener un producto por ID
 
 **GET `/products/{id}`**
 
-### 4. Cambiar estado (Toggle)
+### 5. Cambiar estado
 
 **PUT `/products/{id}/changeStatus`**
+Alterna entre `active: true` y `active: false`.
 
-### 5. Desactivar producto
+---
 
-**PUT `/products/{id}/deactivate`**
-Establece el campo `active` en `false`.
+## ⚠️ Manejo de Errores
 
-## Validaciones
+Si las validaciones fallan o el recurso no se encuentra, la API devuelve:
 
-- `price > 0`: No se permiten precios menores o iguales a cero.
-- `stock >= 0`: No se permite stock negativo.
-- `name`: No puede estar vacío.
+- **400 Bad Request** o **422 Unprocessable Entity**: Si los datos enviados no cumplen con las validaciones (ej. precio negativo, nombre vacío).
+- **404 Not Found**: Si se intenta acceder o modificar un producto que no existe en la base de datos.
 
-## Tecnologías utilizadas
+---
 
-- **FastAPI**: Framwork web moderno y rápido.
-- **SQLModel**: Para interactuar con la base de datos PostgreSQL.
-- **PostgreSQL**: Base de datos relacional.
-- **Docker**: Containerización.
-- **GitHub Actions/GHCR**: Para el despliegue automático de la imagen.
+## ✅ Validaciones
+
+- `name`: No puede estar vacío (mínimo 1 carácter).
+- `price`: Debe ser estrictamente superior a 0 (`gt=0`).
+- `stock`: Debe ser mayor o igual a 0 (`ge=0`).
+- `createdAt`: Campo generado automáticamente al crear el producto.
+
+## ⚙️ Tecnologías
+
+- **FastAPI** & **SQLModel** (Python)
+- **PostgreSQL** (Puerto interno 5432)
+- **Docker & Docker Compose** (Puerto expuesto 8080)
