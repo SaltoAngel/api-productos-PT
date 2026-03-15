@@ -5,12 +5,12 @@ from app.models import Product
 from app.schema import ProductCreate # Se añade ProductCreate para el POST
 import logging
 import json
-from datetime import datetime
+from datetime import datetime, UTC
 
 class JSONFormatter(logging.Formatter):
     def format(self, record):
         log_record = {
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat(),
             "level": record.levelname,
             "name": record.name,
             "message": record.getMessage(),
@@ -37,18 +37,16 @@ app = FastAPI(title="API de Productos")
 if not app:
     logger.error(
         "Error al inicializar la aplicación", 
-        extra={"extra_info": {"app": app}}
+        extra={"extra_info": {"app": "FastAPI instance"}}
     )
     raise HTTPException(
         status_code=500, 
         detail="Error al inicializar la aplicación"
     )
 else:
-    logger.info(
-        "Aplicación inicializada correctamente", 
-        extra={"extra_info": {"app": app}}
-    )
-
+    logger.info("Aplicación inicializada", 
+    extra={"extra_info": {"status": "ready"}})
+    
 # Evento que se ejecuta al iniciar la aplicación
 @app.on_event("startup")
 def on_startup():
@@ -57,12 +55,12 @@ def on_startup():
 if create_db_and_tables:
     logger.info(
         "Base de datos creada correctamente", 
-        extra={"extra_info": {"create_db_and_tables": create_db_and_tables}}
+        extra={"extra_info": {"create_db_and_tables": "Function called successfully"}}
     )
 else:
     logger.error(
         "Error al crear la base de datos",  
-        extra={"extra_info": {"create_db_and_tables": create_db_and_tables}}
+        extra={"extra_info": {"create_db_and_tables": "Function call failed"}}
     )
     raise HTTPException(
         status_code=500, 
@@ -85,7 +83,7 @@ def read_products(
     if not products:
         logger.warning(
             "Intento de obtener productos fallido", 
-            extra={"extra_info": {"products": products, "reason": "not_found"}}
+            extra={"extra_info": {"products": [], "reason": "not_found"}}
         )
         raise HTTPException(
             status_code=404, 
@@ -93,7 +91,7 @@ def read_products(
         )
     logger.info(
         "Productos obtenidos correctamente", 
-        extra={"extra_info": {"products": products}}
+        extra={"extra_info": {"count": len(products)}}
     )
     return products
 
@@ -133,13 +131,13 @@ def create_product(
     session.commit()        # Guarda los cambios en la DB
     logger.info(
         "Producto creado correctamente", 
-        extra={"extra_info": {"product_id": db_product.id, "new_data": db_product}}
+        extra={"extra_info": {"product_id": db_product.id, "new_data": db_product.model_dump()}}
     )
     session.refresh(db_product)
     if db_product.id is None:
         logger.error(
             "Error al devolver el resultado, el producto posiblemente se ha creado", 
-            extra={"extra_info": {"product_id": db_product.id, "new_data": db_product}}
+            extra={"extra_info": {"product_id": db_product.id, "new_data": db_product.model_dump()}}
         )
         raise HTTPException(
             status_code=500, 
@@ -182,7 +180,7 @@ def update_product(
     session.refresh(existing_product)
     logger.info(
         "Producto actualizado correctamente", 
-        extra={"extra_info": {"product_id": product_id, "new_data": existing_product}}
+        extra={"extra_info": {"product_id": product_id, "new_data": existing_product.model_dump()}}
     )
     return existing_product
 
