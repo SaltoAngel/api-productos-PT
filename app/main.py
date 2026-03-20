@@ -76,7 +76,7 @@ else:
 def read_products(
     session: Session = Depends(get_session),
     offset: int = 0, # Desplazamiento (desde qué registro empezar)
-    limit: int = Query(default=10, le=100) # Límite de resultados (máx 100)
+    limit: int = Query(default=5, le=100) # Límite de resultados (máx 100)
 ):
     # Selecciona todos los productos aplicando el desplazamiento y límite
     products = session.exec(select(Product).offset(offset).limit(limit)).all()
@@ -170,7 +170,6 @@ def update_product(
     
     # Obtenemos solo los datos que el usuario envió (excluyendo los no definidos)
     update_data = product.dict(exclude_unset=True)
-
     # Actualizamos los atributos del producto existente
     for key, value in update_data.items():
         setattr(existing_product, key, value)

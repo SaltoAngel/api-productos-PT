@@ -3,15 +3,15 @@ import os
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
-    postgres_user: str
-    postgres_password: str
-    postgres_db: str
-    db_host: str
-    db_port: str
-    database_url: str
-    secret_key: str
-    algorithm: str
-    access_token_expire_minutes: int
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str
+    POSTGRES_DB: str
+    DB_HOST: str
+    DB_PORT: str
+    DATABASE_URL: str
+    SECRET_KEY: str
+    ALGORITHM: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int
 
     # Configuración moderna para Pydantic V2
     model_config = SettingsConfigDict(
@@ -22,7 +22,7 @@ class Settings(BaseSettings):
 settings = Settings()
 
 # El motor (engine) se encarga de la comunicación con la base de datos
-engine = create_engine(settings.database_url)
+engine = create_engine(settings.DATABASE_URL)
 
 # Crea todas las tablas definidas en los modelos que heredan de SQLModel
 def create_db_and_tables():
