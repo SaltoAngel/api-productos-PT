@@ -2,7 +2,7 @@
 
 Esta es una API REST para la gestión de productos, construida con FastAPI y SQLModel
 
-## 🚀 Instalación y Ejecución Rápida
+## nstalación y Ejecución Rápida
 
 Para facilitar la isntalacion, el proyecto se puede poner en marcha con un solo comando:
 
@@ -76,7 +76,7 @@ Alterna entre `active: true` y `active: false`.
 
 ---
 
-## ⚠️ Manejo de Errores
+## Manejo de Errores
 
 Si las validaciones fallan o el recurso no se encuentra, la API devuelve:
 
@@ -85,14 +85,14 @@ Si las validaciones fallan o el recurso no se encuentra, la API devuelve:
 
 ---
 
-## ✅ Validaciones
+## Validaciones
 
 - `name`: No puede estar vacío (mínimo 1 carácter).
 - `price`: Debe ser estrictamente superior a 0 (`gt=0`).
 - `stock`: Debe ser mayor o igual a 0 (`ge=0`).
 - `createdAt`: Campo generado automáticamente al crear el producto.
 
-## ⚙️ Tecnologías
+## Tecnologías
 
 - **FastAPI** & **SQLModel** (Python)
 - **PostgreSQL** (Puerto interno 5432)
